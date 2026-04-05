@@ -4,7 +4,8 @@ import { ApiError, LoginRequest, RegisterRequest, User } from '@/types';
 type ApiPayload = Record<string, unknown>;
 type QueryParams = Record<string, string | number | boolean | undefined>;
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+// Use same-domain API path in production (proxied by Next rewrites).
+const API_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
 
 class ApiClient {
   private client: AxiosInstance;
