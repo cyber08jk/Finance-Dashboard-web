@@ -15,21 +15,30 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             console.log('✓ Vercel serverless DB connection established');
         } catch (e) {
             console.error('⚠ Vercel serverless DB connection failed:', e);
-            // Continue anyway - some routes might work without DB
         }
     }
 
-    // Get the path after /api
-    const path = req.url?.replace(/^\/api/, '') || '/';
+    // Extract the path from the URL
+    // Vercel passes /api/health as the URL, we need to strip /api
+    let path = req.url || '/';
     
-    // Create a modified request object
+    // Remove /api prefix if present
+    if (path.startsWith('/api')) {
+        path = path.substring(4);
+    }
+    
+    // Ensure path starts with /
+    if (!path.startsWith('/')) {
+        path = '/' + path;
+    }
+
+    // Create modified request
     const modifiedReq = {
         ...req,
         url: path,
-        originalUrl: path,
-        path: path
+        originalUrl: path
     };
 
-    // Pass to Express app
+    // Pass to Express
     return app(modifiedReq as any, res as any);
 }
