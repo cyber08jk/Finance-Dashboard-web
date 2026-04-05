@@ -1,56 +1,50 @@
-// Simple Vercel serverless function without external dependencies
-module.exports = (req, res) => {
-    // Strip /api prefix
-    const path = req.url.replace(/^\/api/, '') || '/';
-    
-    // Set CORS headers
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    
-    // Handle OPTIONS preflight
-    if (req.method === 'OPTIONS') {
-        res.status(200).end();
-        return;
+// Import using dynamic require to handle ES modules
+let app;
+let AppDataSource;
+let dbConnected = false;
+
+async function initializeApp() {
+    if (!app) {
+        // Dynamically import the ES module
+        const serverModule = await import('../src/server.js');
+        app = serverModule.default;
+        
+        const dbModule = await import('../src/config/database.js');
+        AppDataSource = dbModule.AppDataSource;
     }
     
-    // Set content type
-    res.setHeader('Content-Type', 'application/json');
-    
-    // Route handling
-    if (path === '/health' && req.method === 'GET') {
-        res.status(200).json({
-            status: 'OK',
-            timestamp: new Date().toISOString(),
-            version: '1.0.0'
-        });
-        return;
+    // Initialize database connection once
+    if (!dbConnected && AppDataSource) {
+        try {
+            if (!AppDataSource.isInitialized) {
+                await AppDataSource.initialize();
+            }
+            dbConnected = true;
+            console.log('✓ Vercel serverless DB connection established');
+        } catch (e) {
+            console.error('⚠ Vercel serverless DB connection failed:', e);
+            // Continue anyway - some routes might work without DB
+        }
     }
-    
-    if (path === '/' && req.method === 'GET') {
-        res.status(200).json({
-            status: 200,
-            message: 'Finance Dashboard Backend API is running',
+}
+
+module.exports = async (req, res) => {
+    try {
+        // Initialize app and database
+        await initializeApp();
+        
+        // Strip /api prefix
+        req.url = req.url.replace(/^\/api/, '') || '/';
+        
+        // Pass to Express app
+        return app(req, res);
+    } catch (error) {
+        console.error('Serverless function error:', error);
+        res.status(500).json({
+            status: 500,
+            error_code: 'INTERNAL_ERROR',
+            message: 'Internal server error',
             timestamp: new Date().toISOString()
         });
-        return;
     }
-    
-    if (path === '/auth/register' && req.method === 'POST') {
-        res.status(501).json({
-            status: 501,
-            message: 'Registration endpoint - database not connected yet',
-            path: path,
-            method: req.method
-        });
-        return;
-    }
-    
-    // 404 for everything else
-    res.status(404).json({
-        status: 404,
-        error_code: 'NOT_FOUND',
-        message: `Route ${req.method} ${path} not found`,
-        timestamp: new Date().toISOString()
-    });
 };
