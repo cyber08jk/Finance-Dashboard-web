@@ -1,0 +1,205 @@
+================================================================================
+FINANCE DASHBOARD BACKEND - PROJECT OVERVIEW
+================================================================================
+
+PROJECT STATUS: COMPLETE AND READY FOR EVALUATION
+LAST UPDATED: April 3, 2026
+
+================================================================================
+QUICK START
+================================================================================
+
+1. Install dependencies
+   npm install
+
+2. Start development server
+   npm run dev
+
+3. Server URL
+   http://localhost:3000
+
+4. Run tests
+   npm test
+
+================================================================================
+WHAT THIS PROJECT INCLUDES
+================================================================================
+
+- Authentication with JWT (register, login, profile)
+- Role-based access control (viewer, analyst, admin)
+- User management (admin-controlled)
+- Financial record CRUD with filtering and pagination
+- Dashboard analytics APIs
+- Zod-based validation
+- Centralized error handling
+- PostgreSQL persistence with TypeORM
+- Soft delete for financial records
+
+================================================================================
+TECH STACK
+================================================================================
+
+- Runtime: Node.js
+- Language: TypeScript
+- Framework: Express
+- Database: PostgreSQL
+- ORM: TypeORM
+- Auth: jsonwebtoken + bcryptjs
+- Validation: Zod
+- Testing: Jest
+- Security middleware: helmet, cors, express-rate-limit
+
+================================================================================
+PROJECT STRUCTURE
+================================================================================
+
+src/
+  config/        Environment, DB config, permission mapping
+  controllers/   HTTP layer
+  services/      Business logic
+  repositories/  Data access layer
+  models/        TypeORM entities
+  middlewares/   Auth, authorization, validation, error handler
+  validators/    Request and query schemas
+  utils/         Auth helpers and custom errors
+  __tests__/     Unit tests
+  server.ts      Route setup and bootstrap
+
+Root files:
+  README.md              Main documentation
+  PROJECT_OVERVIEW.txt   This summary
+
+================================================================================
+ROLES AND ACCESS MODEL
+================================================================================
+
+Viewer
+- View records (own scope enforced in service layer)
+- View dashboard summaries
+- Cannot create, update, or delete records
+
+Analyst
+- View records
+- Create records
+- Update own records
+- View dashboard summaries
+- Cannot delete records
+
+Admin
+- Full record access including delete
+- Manage users
+- Access roles metadata endpoint
+
+================================================================================
+API ENDPOINTS (21 TOTAL)
+================================================================================
+
+AUTH (3)
+- POST /auth/register
+- POST /auth/login
+- GET  /auth/profile
+
+RECORDS (5)
+- POST   /records
+- GET    /records
+- GET    /records/:id
+- PATCH  /records/:id
+- DELETE /records/:id
+
+DASHBOARD (5)
+- GET /dashboard/summary
+- GET /dashboard/category-breakdown
+- GET /dashboard/recent-activity
+- GET /dashboard/monthly-trends
+- GET /dashboard/weekly-trends
+
+USERS (6)
+- POST   /users
+- GET    /users
+- GET    /users/:id
+- PATCH  /users/:id
+- DELETE /users/:id
+- GET    /users/:id/permissions
+
+ROLES (1)
+- GET /roles
+
+UTILITY (1)
+- GET /health
+
+================================================================================
+VALIDATION, AUTH, AND SECURITY NOTES
+================================================================================
+
+- Input validation for body and query is handled via Zod
+- Query filters support date ranges and search
+- Date range order is validated (date_from <= date_to)
+- JWT is required for protected routes
+- Protected middleware verifies user exists and is active
+- Inactive users are blocked from login and protected APIs
+- Errors follow a consistent JSON structure
+- Rate limiting applied for auth and general API traffic
+
+================================================================================
+DATABASE MODEL SUMMARY
+================================================================================
+
+users
+- id (uuid)
+- email (unique)
+- username
+- password_hash
+- role (viewer | analyst | admin)
+- status (active | inactive)
+- created_at, updated_at
+
+financial_records
+- id (uuid)
+- user_id (fk to users)
+- amount (decimal)
+- type (income | expense)
+- category
+- date
+- description (nullable)
+- created_by (nullable)
+- created_at, updated_at
+- deleted_at (soft delete)
+
+Indexes include user_id, date, category, and type.
+
+================================================================================
+TEST STATUS
+================================================================================
+
+Current unit test result:
+- Test Suites: 3 passed
+- Tests: 17 passed
+
+Command used:
+npm test -- --runInBand
+
+================================================================================
+DOCUMENTATION
+================================================================================
+
+All project documentation is consolidated into:
+- README.md
+
+This overview is a quick submission summary only.
+
+================================================================================
+SUBMISSION CHECKLIST
+================================================================================
+
+- Backend architecture with separation of concerns: DONE
+- Role-based access control and ownership checks: DONE
+- Financial records CRUD with filters: DONE
+- Dashboard aggregated APIs: DONE
+- Validation and consistent error handling: DONE
+- Persistent storage via PostgreSQL: DONE
+- Test suite present and passing: DONE
+- Concise documentation: DONE
+
+================================================================================
+END OF OVERVIEW
+================================================================================
