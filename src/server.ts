@@ -309,6 +309,9 @@ const startServer = async () => {
   }
 };
 
-startServer();
+// Prevent startServer() execution in Vercel serverless environment
+if (process.env.VERCEL !== '1') {
+  startServer();
+}
 
 export default app;
