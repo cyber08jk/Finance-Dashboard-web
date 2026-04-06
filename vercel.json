@@ -1,16 +1,56 @@
 {
   "version": 2,
-  "name": "finance-dashboard-backend",
   "builds": [
     {
-      "src": "api/index.js",
-      "use": "@vercel/node"
+      "src": "package.json",
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": ["dist/**"]
+      }
+    },
+    {
+      "src": "frontend/package.json",
+      "use": "@vercel/next"
     }
   ],
   "routes": [
     {
+      "src": "/api/(.*)",
+      "dest": "/api/serverless.js"
+    },
+    {
+      "src": "/health",
+      "dest": "/api/serverless.js"
+    },
+    {
+      "src": "/auth/(.*)",
+      "dest": "/api/serverless.js"
+    },
+    {
+      "src": "/users/(.*)",
+      "dest": "/api/serverless.js"
+    },
+    {
+      "src": "/records/(.*)",
+      "dest": "/api/serverless.js"
+    },
+    {
+      "src": "/dashboard/(.*)",
+      "dest": "/api/serverless.js"
+    },
+    {
+      "src": "/roles",
+      "dest": "/api/serverless.js"
+    },
+    {
       "src": "/(.*)",
-      "dest": "/api/index.js"
+      "dest": "/frontend/$1"
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "/api/serverless.js"
     }
   ]
 }

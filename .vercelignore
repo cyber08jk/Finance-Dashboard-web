@@ -1,0 +1,43 @@
+# Dependencies
+node_modules
+frontend/node_modules
+
+# Testing
+src/__tests__
+*.test.ts
+*.test.js
+jest.config.js
+
+# Development
+.env
+.env.local
+.env.development
+*.log
+
+# Build artifacts (will be rebuilt)
+dist
+frontend/.next
+frontend/out
+
+# Git
+.git
+.gitignore
+
+# Documentation (optional - remove if you want docs deployed)
+PROJECT_OVERVIEW.txt
+VERCEL_DEPLOYMENT_GUIDE.md
+QUICK_DEPLOY.md
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# Scripts
+scripts

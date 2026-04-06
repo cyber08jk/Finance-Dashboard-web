@@ -1,14 +1,24 @@
-# Finance Dashboard Backend
+# Finance Dashboard
 
-A TypeScript + Express backend for a finance dashboard with role-based access control, financial record management, and analytics APIs.
+A full-stack TypeScript finance dashboard with role-based access control, financial record management, and analytics.
 
 ## Tech Stack
+
+### Backend
 - Node.js + TypeScript
 - Express
 - PostgreSQL + TypeORM
 - JWT authentication
 - Zod validation
 - Jest unit tests
+
+### Frontend
+- Next.js 14
+- React 18
+- TypeScript
+- Tailwind CSS
+- Recharts (analytics)
+- Axios (API client)
 
 ## Features
 - User authentication (`register`, `login`, `profile`)
@@ -159,3 +169,48 @@ All API errors follow this structure:
 - Records use soft delete.
 - Inactive users cannot access protected routes.
 - Currency display in frontend is configured for INR.
+
+## Deployment
+
+### Quick Deployment to Vercel + Supabase
+
+See **[QUICK_DEPLOY.md](QUICK_DEPLOY.md)** for step-by-step deployment guide (20 minutes).
+
+### Deployment Files
+- `QUICK_DEPLOY.md` - Fast track deployment guide
+- `VERCEL_DEPLOYMENT_GUIDE.md` - Detailed deployment documentation
+- `DEPLOYMENT_CHECKLIST.md` - Pre and post-deployment checklist
+- `.env.production.example` - Production environment variables template
+
+### Architecture
+This project uses a monorepo structure:
+- **Backend**: Express API (deployed as Vercel serverless function)
+- **Frontend**: Next.js app (deployed as Vercel Next.js project)
+- **Database**: Supabase PostgreSQL
+
+Both frontend and backend are deployed as separate Vercel projects for better scalability and independent deployments.
+
+## Development
+
+### Local Setup
+```bash
+# Install dependencies
+npm install
+cd frontend && npm install && cd ..
+
+# Setup environment
+cp .env.example .env
+cp frontend/.env.example frontend/.env.local
+
+# Start both servers
+npm run dev:all
+```
+
+### Separate Development
+```bash
+# Backend only (port 3000)
+npm run dev
+
+# Frontend only (port 3001)
+cd frontend && npm run dev
+```
