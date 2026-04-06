@@ -19,12 +19,7 @@ The API is now properly integrated into the Next.js App Router. The build is suc
 - `POST /api/auth/register` → `frontend/app/api/auth/register/route.ts` ✓
 - `POST /api/auth/login` → `frontend/app/api/auth/login/route.ts` ✓
 
-## Deploy Now
 
-```bash
-git add .
-git commit -m "Fix: Move API to Next.js App Router - working solution"
-git push
 ```
 
 ## Test After Deployment
