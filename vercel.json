@@ -13,11 +13,9 @@
       "use": "@vercel/next"
     }
   ],
+  "installCommand": "npm install && cd frontend && npm install",
+  "buildCommand": "npm run vercel-build",
   "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/api/serverless.js"
-    },
     {
       "src": "/health",
       "dest": "/api/serverless.js"
@@ -45,12 +43,6 @@
     {
       "src": "/(.*)",
       "dest": "/frontend/$1"
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/api/:path*",
-      "destination": "/api/serverless.js"
     }
   ]
 }
